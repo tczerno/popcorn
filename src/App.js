@@ -7,7 +7,7 @@ const average = (arr) =>
 const KEY = "d6317b60";
 
 export default function App() {
-  const [query, setQuery] = useState("The Negotiator");
+  const [query, setQuery] = useState("");
   const [movies, setMovies] = useState([]);
   const [watched, setWatched] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -81,6 +81,8 @@ export default function App() {
         setError("");
         return;
       }
+
+      handleCloseMovie();
       fetchMovies();
 
       return function () {
@@ -285,12 +287,27 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
 
   useEffect(
     function () {
+      function callback(e) {
+        if (e.code === "Escape") {
+          onCloseMovie();
+        }
+      }
+      document.addEventListener("keydown", callback);
+
+      return function () {
+        document.removeEventListener("keydown", callback);
+      };
+    },
+    [onCloseMovie]
+  );
+
+  useEffect(
+    function () {
       async function getMovieDetails() {
         setIsLoading(true);
         const res = await fetch(
           `http://www.omdbapi.com/?apikey=${KEY}&i=${selectedId}`
         );
-        console.log(selectedId);
         const data = await res.json();
         setMovie(data);
         setIsLoading(false);
