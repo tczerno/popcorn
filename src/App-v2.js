@@ -67,7 +67,7 @@ export default function App() {
           setMovies(data.Search);
           setError("");
         } catch (err) {
-          //console.error(err.message);
+          console.error(err.message);
 
           if (err.name !== "AbortError") {
             setError(err.message);
@@ -258,7 +258,6 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
   const watchedUserRating = watched.find(
     (movie) => movie.imdbID === selectedId
   )?.userRating;
-
   const {
     Title: title,
     Year: year,
